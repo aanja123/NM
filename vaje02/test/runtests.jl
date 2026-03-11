@@ -41,7 +41,7 @@ end
 end
 
 @testset "System Ax=b can be solved by A\b" begin
-    T = TridiagonalMatrix([1, 2], [3,4, 5,], [6,7])
+    T = TridiagonalMatrix([1, 2], [3,4,5], [6,7])
     prava_resitev = [1, 2, 3]
     b = T * [1, 2, 3]
     x = T\b

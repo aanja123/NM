@@ -14,7 +14,12 @@ struct TridiagonalMatrix
     ud #upper diagonal
 end
 
-import Base: getindex, setindex!, *,size, \
+import Base: getindex, setindex!, *,size, \, copy
+
+
+function copy(T::TridiagonalMatrix)
+    return TridiagonalMatrix(copy(T.ld), copy(T.d), copy(T.ud))
+end
 
 function setindex!(T::TridiagonalMatrix, v, i, j)
     if i == j
@@ -57,9 +62,23 @@ function *(T::TridiagonalMatrix, x::Vector)
 end
 
 function \(T::TridiagonalMatrix, b::Vector)
+    b = copy(b)
+    T = copy(T)
+    #eliminate
+    n, _m = size(T)
+    for k in 2:n
+        l = T[k, k-1] / T[k-1, k-1]
+        #T[k, k-1] = 0 dont bother to set it to zero, we will not use it anymore
+        T[k,k] -=  l*T[k-1, k]
+        b[k] -= l * b[k-1]
+    end
+    #back substitution
     x = copy(b)
-    
-    
+    x[n] = b[n] / T[n, n]
+    for k in n-1:-1:1
+        x[k] = (b[k] - T[k, k+1]*x[k+1]) / T[k, k]
+    end
+    return x
 end
 
 export TridiagonalMatrix
