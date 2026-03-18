@@ -1,0 +1,10 @@
+# This file is machine-generated - editing it directly is not advised
+
+julia_version = "1.12.3"
+manifest_format = "2.0"
+project_hash = "95e5ff8da682d6b022c8293da9ae66f7e1a90e94"
+
+[[deps.vaje03]]
+path = "vaje03"
+uuid = "4856ce24-fe73-4dc6-b2cd-3cae7c918886"
+version = "0.1.0"
