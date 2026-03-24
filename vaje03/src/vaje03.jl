@@ -45,10 +45,16 @@ struct DivideDiffMethod
     h
 end
 
+"""
+    A, b = matrix_rhs(op::Laplace, Z)
+
+Construct a matrix system for Laplace operator with boundary condition given by z
+"""
+
 function matrix_rhs(op::Laplace, Z)
-    n,m = size(Z) #n+1 and m+1
+    n,m = size(Z) # n+1 and m+1
     N=(n-2)*(m-2)
-    index(i,j) = index_map(n,m)(i,j) 
+    index(i,j) = index_map(m)(i,j)
     A = zeros(N,N)
     b = zeros(N)
     for i = 2:n-1, j = 2:m-1
@@ -56,18 +62,22 @@ function matrix_rhs(op::Laplace, Z)
         k = index(i,j)
         # Z[i+1,j] + Z[i-1,j] + Z[i,j+1] + Z[i,j-1] - 4*Z[i,j] = 0
         A[k,k] = -4
-        for delta_i in (-1,1), delta_j in (-1,1)
+        for (delta_i , delta_j) = [(-1,0),(1,0),(0,-1),(0,1)]
             ii = i + delta_i
             jj = j + delta_j
             if (ii < 2 ) || (ii > n-1) || (jj < 2) || (jj > m-1)
+                #boundary condition
                 b[k] -= Z[ii,jj]
             else
                 l = index(ii,jj)
                 A[k,l] = 1
             end
+        end
+    end
+    return A,b
 end
 
-index_map(n,m) = (i,j) -> (i-1)+(j-2)*(n-1)
+index_map(m) = (i,j) -> j-1 + (m-2)*(i-2)
 index_map_inv(n,m) = k -> (k%(n-2)+1, k÷(n-2)+1)
 
 function solve(bvp::BVPRect, m::DivideDiffMethod)
@@ -77,11 +87,32 @@ function solve(bvp::BVPRect, m::DivideDiffMethod)
     A,b = matrix_rhs(bvp.op, Z)
     u = A\b
     #reshape u to z
-    Z[2:end-1, 2:end-1] = reshape(u, n-1, m-1)
+    n,m = size(Z)
+    println("n=", n, " m=", m)
+    println("size u=", size(u))
+    Z[2:end-1, 2:end-1] = reshape(u, m-2, n-2)'
+
     return Z, x, y
 
 end
 
-export BVPRect, Laplace, discretize, solve, DivideDiffMethod
+struct IteracijkaMetoda
+    h #širina podintervalov
+    n #
+end
+
+function solve(bvp::BVPRect, metoda::IteracijkaMetoda)
+    Z, x, y = discretize(bvp, metoda.h)
+    Zres = copy(Z)
+    n,m = size(Z)
+    for k = 1:metoda.n #n korakov iteracije
+        for i = 2:n-1, j = 2:m-1
+            Zres[i,j] = (Zres[i+1,j] + Zres[i-1,j] + Zres[i,j+1] + Zres[i,j-1])/4
+        end
+    end
+    return Zres, x, y
+end
+
+export BVPRect, Laplace, discretize, solve, DivideDiffMethod, IteracijkaMetoda
 
 end # module vaje03
