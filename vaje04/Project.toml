@@ -1,0 +1,12 @@
+name = "vaje04"
+uuid = "44d2c31d-9bb7-4e2a-acf3-ed61dfb5fe9e"
+version = "0.1.0"
+authors = ["aanja123 <aa1737@student.uni-lj.si>"]
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+LinearAlgebra = "1.12.0"
+Test = "1.11.0"
