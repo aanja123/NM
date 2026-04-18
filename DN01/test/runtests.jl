@@ -1,10 +1,6 @@
 using Test
 using DN01
 
-@testset "DN01" begin
-    DN01.greet()
-end
-
 @testset "setindex!" begin
     A = RedkaMatrika(3)
     A[1, 1] = 4.0
@@ -62,4 +58,20 @@ end
 
     x, it = sor(A, b, zeros(3), 1.0)
     @test maximum(abs.(x - x_res)) < 1e-9
+end
+
+@testset "negation" begin
+    A = RedkaMatrika(3)
+    A[1, 1] = 4.0 
+    A[1, 3] = 2.0
+    A[2, 2] = 3.0
+    A[3, 1] = 4.0
+    A[3, 3] = 5.0 
+    B = -A
+    @test B[1, 1] == -4.0
+    @test B[1, 3] == -2.0
+    @test B[2, 2] == -3.0
+    @test B[3, 1] == -4.0
+    @test B[3, 3] == -5.0
+    @test B[1, 2] == 0.0  # ničelni element ostane 0
 end

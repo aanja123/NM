@@ -2,8 +2,6 @@ module DN01
 
 using Graphs
 
-greet() = print("Hello World!")
-
 struct RedkaMatrika
     V::Vector{Vector{Float64}}  #neničelne vrednosti po vrsticah
     I::Vector{Vector{Int}}      #indeksi neničelnih vrednosti po vrsticah
