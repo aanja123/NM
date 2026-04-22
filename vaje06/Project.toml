@@ -1,0 +1,11 @@
+name = "vaje06"
+uuid = "cb86fa63-5755-410d-90b7-eac23add9857"
+version = "0.1.0"
+authors = ["aanja123 <aa1737@student.uni-lj.si>"]
+
+[deps]
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[compat]
+ForwardDiff = "1.3.3"

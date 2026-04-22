@@ -1,3 +1,4 @@
 [deps]
+DN01 = "fb4327ef-2a5f-4578-b45e-6ae0f7fdf5bc"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 vaje03 = "4856ce24-fe73-4dc6-b2cd-3cae7c918886"
