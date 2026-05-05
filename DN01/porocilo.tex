@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{1. domača naloga pri predmetu Numerična matematika}
+\author{Anja Abramovič}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Opis naloge}
+Naloga obravnava reševanje sistema linearnih enačb $A\mathbf{x} = \mathbf{b}$, kjer je $A$ diagonalno dominantna redka matrika. Implementirali smo ustrezno podatkovno strukturo za redke matrike ter iterativno metodo SOR za reševanje sistema. Metodo smo uporabili za vložitev grafov v ravnino s fizikalno metodo.
+
+\section{Redka matrika}
+Redka matrika je matrika, pri kateri je velika večina elementov ničelnih. Shranjevanje celotne $n \times n$ matrike bi zahtevalo $\mathcal{O}(n^2)$ prostora, čeprav večina elementov ne nosi nobene informacije. Zato definiramo podatkovno strukturo \texttt{RedkaMatrika}, ki hrani le neničelne elemente. Za vsako vrstico $i$ sta shranjeni dve tabeli:
+\begin{itemize}
+    \item $V[i]$ — neničelne vrednosti v vrstici $i$,
+    \item $I[i]$ — indeksi stolpcev teh vrednosti.
+\end{itemize}
+Torej velja $V[i][j] = a_{i, I[i][j]}$. Prostorska zahtevnost se tako zmanjša na 
+$\mathcal{O}(k)$, kjer je $k$ število neničelnih elementov.
+
+Na primer, matriko
+\begin{equation}
+    A = \begin{pmatrix} 4 & 0 & 2 \\ 0 & 3 & 0 \\ 4 & 0 & 5 \end{pmatrix}
+\end{equation}
+shranimo kot:
+\begin{align*}
+    V &= \big([4,\ 2],\ [3],\ [4,\ 5]\big), \\
+    I &= \big([1,\ 3],\ [2],\ [1,\ 3]\big).
+\end{align*}
+
+\noindent Za podatkovno strukturo so implementirane naslednje operacije:
+\begin{itemize}
+    \item \texttt{getindex}: vrne element $a_{ij}$, oziroma $0$, če element ni shranjen,
+    \item \texttt{setindex!}: nastavi element $a_{ij}$ oziroma doda nov neničelni element,
+    \item \texttt{size}: vrne velikost matrike,
+    \item \texttt{*}: pomnoži matriko z vektorjem $A\mathbf{x}$, pri čemer upošteva le neničelne elemente,
+    \item \texttt{-}: vrne negacijo matrike $-A$.
+\end{itemize}
+
+\section{Metoda SOR}
+Za reševanje sistema $A\mathbf{x} = \mathbf{b}$ uporabimo iterativno metodo SOR 
+(Successive Over-Relaxation). V vsakem koraku posodobimo posamezne komponente 
+rešitve po formuli:
+\begin{equation}
+    x_i^{(k+1)} = (1 - \omega) x_i^{(k)} + \frac{\omega}{a_{ii}} 
+    \left( b_i - \sum_{j < i} a_{ij} x_j^{(k+1)} - \sum_{j > i} a_{ij} x_j^{(k)} \right),
+\end{equation}
+kjer je $\omega \in (0, 2)$ parameter sprostitve. Iteracija se ustavi, ko je norma ostanka dovolj majhna:
+\begin{equation}
+    \|A\mathbf{x}^{(k)} - \mathbf{b}\|_\infty < \delta.
+\end{equation}
+Hitrost konvergence je močno odvisna od izbire $\omega$, optimalna vrednost 
+minimizira število potrebnih iteracij.
+
+Pri uporabi redke matrike posodobitev $x_i^{(k+1)}$ izračunamo le iz neničelnih 
+elementov vrstice $i$, kar zmanjša časovno zahtevnost posamezne iteracije z 
+$\mathcal{O}(n)$ na $\mathcal{O}(k)$, kjer je $k$ povprečno število neničelnih 
+elementov v vrstici.
+
+\section{Rezultati}
+Metodo SOR smo uporabili za vložitev grafov v ravnino s fizikalno metodo, ki temelji na 
+modelu harmoničnih vzmeti. Koordinate vozlišč določimo kot ravnovesje sil, kar vodi do 
+sistema linearnih enačb z redko, diagonalno dominantno in negativno definitno matriko.
+
+Metodo smo preizkusili na grafu krožne lestve z 16 vozlišči. Zunanja vozlišča so fiksirana
+enakomerno na enotski krožnici, notranja pa postavimo v ravnovesje s pomočjo metode SOR 
+(slika~\ref{fig:krozna}). Algoritem preizkusimo še na pravokotni mreži $6 \times 6$, 
+kjer fiksiramo le štiri vogalna vozlišča (slika~\ref{fig:mreza}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{krozna.png}
+    \caption{Krožna lestev z 16 vozlišči, vložena s fizikalno metodo.}
+    \label{fig:krozna}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{mreza.png}
+    \caption{Pravokotna mreža $6 \times 6$, vložena s fizikalno metodo. Pritrjeni so le vogali.}
+    \label{fig:mreza}
+\end{figure}
+
+Hitrost konvergence metode SOR je močno odvisna od izbire parametra $\omega$. Na 
+sliki~\ref{fig:konvergenca} je prikazano število iteracij v odvisnosti od $\omega$ 
+za sistem krožne lestve. Optimalna vrednost $\omega^* \approx 1.12$ minimizira 
+število potrebnih iteracij na 21 iteracij.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{konvergenca.PNG}
+    \caption{Odvisnost števila iteracij metode SOR od parametra $\omega$ za sistem krožne lestve.}
+    \label{fig:konvergenca}
+\end{figure}
+
+\end{document}
