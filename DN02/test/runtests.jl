@@ -33,10 +33,13 @@ end
 end
 
 @testset "ploscina" begin
-    p1 = ploscina(100)
-    p2 = ploscina(1000)
-    p3 = ploscina(10000)
+    p1 = ploscina(22pi, 1.0, -11.0/7.0, 100)
+    p2 = ploscina(22pi, 1.0, -11.0/7.0, 1000)
+    p3 = ploscina(22pi, 1.0, -11.0/7.0, 10000)
     @test isapprox(p1, p2, atol=1e-4)
     @test isapprox(p2, p3, atol=1e-6)
+    #preverimo z znano formulo za astroido (3*pi*a^2 / 8)
+    p_astroida = ploscina(2pi, 1.0, -1.0/4.0)
+    @test isapprox(p_astroida, 3*pi/8, atol=1e-6)
 end
 

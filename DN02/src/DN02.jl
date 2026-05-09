@@ -1,43 +1,36 @@
 module DN02
 
 """
-    x(t)
+    x(t, a=1.0, b=-11.0/7.0)
 Vrne x koordinato hipotrohoide pri parametru `t`.
 """
-function x(t)
-    a = 1.0 
-    b = -11.0/7.0
-    return (a + b) * cos(t) + b * cos((a + b) / b * t)
+function x(t, a=1.0, b=-11.0/7.0)
+    return (a + b) * cos(t) + b * cos((a + b)/b * t)
 end
 
 """
-    y(t)
+    y(t, a=1.0, b=-11.0/7.0)
 Vrne y koordinato hipotrohoide pri parametru `t`.
 """
-function y(t)
-    a = 1.0 
-    b = -11.0/7.0
-    return (a + b) * sin(t) + b * sin((a + b) / b * t)
+function y(t, a=1.0, b=-11.0/7.0)
+    return (a + b) * sin(t) + b * sin((a + b)/b * t)
 end
 
 """
-    dx(t)
+    dx(t, a=1.0, b=-11.0/7.0)
 Vrne odvod x koordinate hipotrohoide pri parametru `t`.
 """
-function dx(t)
-    a = 1.0 
-    b = -11.0/7.0
-    return -(a + b) * sin(t) - (a + b) * sin((a + b) / b * t)
+function dx(t, a=1.0, b=-11.0/7.0)
+    return -(a + b) * sin(t) - (a + b) * sin((a + b)/b * t)
 end
 
+
 """
-    dy(t)
+    dy(t, a=1.0, b=-11.0/7.0)
 Vrne odvod y koordinate hipotrohoide pri parametru `t`.
 """
-function dy(t)
-    a = 1.0 
-    b = -11.0/7.0
-    return (a + b) * cos(t) + (a + b) * cos((a + b) / b * t)
+function dy(t, a=1.0, b=-11.0/7.0)
+    return (a + b) * cos(t) + (a + b) * cos((a + b)/b * t)
 end
 
 """
@@ -46,7 +39,7 @@ Sestavljeno Simpsonovo pravilo za numerično integracijo funkcije `f` na interva
 z `2n` enakomernimi koraki. Vrne približek za integral.
 """
 function simpson(f, a, b, n=1000)
-    h = (b - a) / (2n)
+    h = (b - a) / (2*n)
     result = f(a) + f(b)
     for k in 1:n
         result += 4 * f(a + (2k - 1) * h)
@@ -54,17 +47,19 @@ function simpson(f, a, b, n=1000)
     for j in 1:n-1
         result += 2 * f(a + 2j * h)
     end
-    return result * h / 3
+    return result * h/3
 end
 
+
 """
-    ploscina(n=1000)
-Izračuna ploščino hipotrohoide z parametroma `a=1` in `b=-11/7`
+    ploscina(T, a=1.0, b=-11.0/7.0, n=1000)
+Izračuna ploščino hipotrohoide z parametroma `a` in `b`
 s sestavljenim Simpsonovim pravilom z `2n` koraki.
+Argument `T` je perioda krivulje.
 """
-function ploscina(n=1000)
-    f(t) = 0.5 * (x(t) * dy(t) - dx(t) * y(t))
-    return abs(simpson(f, 0.0, 22pi, n))
+function ploscina(T, a=1.0, b=-11.0/7.0, n=1000)
+    f(t) = 0.5 * (x(t, a, b) * dy(t, a, b) - dx(t, a, b) * y(t, a, b))
+    return abs(simpson(f, 0.0, T, n))
 end
 
 export x, y, dx, dy, simpson, ploscina
