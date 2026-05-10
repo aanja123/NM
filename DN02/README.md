@@ -8,8 +8,7 @@ Izračun ploščine območja, ki ga omejuje hipotrohoida podana parametrično z 
 $$x(t) = (a+b)\cos(t) + b\cos\left(\frac{a+b}{b}t\right)$$
 $$y(t) = (a+b)\sin(t) + b\sin\left(\frac{a+b}{b}t\right)$$
 
-za parametra `a = 1` in `b = -11/7`. Ploščino izračunamo z numerično integracijo 
-s sestavljenim Simpsonovim pravilom.
+za parametra `a = 1` in `b = -11/7`. Ploščino izračunamo z numerično integracijo s sestavljenim Simpsonovim pravilom.
 
 ## Uporaba
 ```julia

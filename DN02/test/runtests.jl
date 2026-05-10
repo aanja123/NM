@@ -40,6 +40,6 @@ end
     @test isapprox(p2, p3, atol=1e-6)
     #preverimo z znano formulo za astroido (3*pi*a^2 / 8)
     p_astroida = ploscina(2pi, 1.0, -1.0/4.0)
-    @test isapprox(p_astroida, 3*pi/8, atol=1e-6)
+    @test isapprox(p_astroida, 3*pi/8, rtol=1e-10)
 end
 

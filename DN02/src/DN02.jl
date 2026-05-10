@@ -34,11 +34,11 @@ function dy(t, a=1.0, b=-11.0/7.0)
 end
 
 """
-    simpson(f, a, b, n=1000)
+    simpson(f, a, b, n=100)
 Sestavljeno Simpsonovo pravilo za numerično integracijo funkcije `f` na intervalu `[a, b]`
 z `2n` enakomernimi koraki. Vrne približek za integral.
 """
-function simpson(f, a, b, n=1000)
+function simpson(f, a, b, n=100)
     h = (b - a) / (2*n)
     result = f(a) + f(b)
     for k in 1:n
@@ -52,12 +52,12 @@ end
 
 
 """
-    ploscina(T, a=1.0, b=-11.0/7.0, n=1000)
+    ploscina(T, a=1.0, b=-11.0/7.0, n=100)
 Izračuna ploščino hipotrohoide z parametroma `a` in `b`
 s sestavljenim Simpsonovim pravilom z `2n` koraki.
 Argument `T` je perioda krivulje.
 """
-function ploscina(T, a=1.0, b=-11.0/7.0, n=1000)
+function ploscina(T, a=1.0, b=-11.0/7.0, n=100)
     f(t) = 0.5 * (x(t, a, b) * dy(t, a, b) - dx(t, a, b) * y(t, a, b))
     return abs(simpson(f, 0.0, T, n))
 end
