@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{2. domača naloga pri predmetu Numerična matematika}
+\author{Anja Abramovič}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Opis naloge}
+Naloga obravnava izračun ploščine območja, ki ga omejuje hipotrohoida. Implementirali smo parametrično predstavitev krivulje in njenih odvodov ter numerično integracijo s sestavljenim Simpsonovim pravilom. Metodo smo preizkusili na več primerih hipotrohoide z različnimi parametri.
+
+\section{Hipotrohoida}
+Hipotrohoida je krivulja, ki jo opiše točka na krogu s polmerom $|b|$, ki se kotali znotraj večjega kroga s polmerom $a$. Parametrično jo podamo z enačbama:
+\begin{align}
+    x(t) &= (a+b)\cos(t) + b\cos\left(\frac{a+b}{b}t\right), \\
+    y(t) &= (a+b)\sin(t) + b\sin\left(\frac{a+b}{b}t\right),
+\end{align}
+kjer je $t$ parameter, $a$ polmer zunanjega kroga in $b$ polmer notranjega kroga. Oblika krivulje je odvisna od razmerja $a/|b|$, bolj ko sta parametra različna, bolj kompleksna je krivulja.
+
+V tej nalogi smo se omejili na obliko $a = 1$ in $b = -p/q$, kjer sta $p$ in $q$ naravni števili. V tem primeru se krivulja zapre po periodi
+\begin{equation}
+    T = \frac{\text{lcm}(p, q)}{q} \cdot 2\pi,
+\end{equation}
+kjer je $\text{lcm}(p, q)$ najmanjši skupni večkratnik števil $p$ in $q$. Parameter $q$ določa število konic oziroma hribčkov (npr. $q=7$ da 7 konic), medtem ko $p$ določa kako so te konice med seboj povezane lahko si sledijo po vrsti ($p=1$) ali pa krivulja preskoči $p-1$ konic (npr. $b=-\frac{2}{5}$ da 5 konic, kjer krivulja poveže konice tako da eno preskoči).
+
+\section{Metoda}
+Ploščino območja, ki ga omejuje hipotrohoida, izračunamo z formulo:
+\begin{equation}
+    P = \frac{1}{2}\left|\int_0^T \left(x(t)\dot{y}(t) - \dot{x}(t)y(t)\right)dt\right|,
+\end{equation}
+kjer sta $\dot{x}(t)$ in $\dot{y}(t)$ odvoda parametričnih enačb in $T$ perioda krivulje.
+
+Integral numerično aproksimiramo s sestavljenim Simpsonovim pravilom. Interval 
+$[0, T]$ razdelimo na $2n$ enakih delov dolžine $h = \frac{T}{2n}$ in integral 
+aproksimiramo kot:
+\begin{equation}
+    \int_0^T f(t)\,dt \approx \frac{h}{3}\left(f(0) + f(T) + 
+    4\sum_{k=1}^{n} f\left((2k-1)h\right) + 
+    2\sum_{j=1}^{n-1} f\left(2jh\right)\right).
+\end{equation}
+Napaka sestavljenega Simpsonovega pravila pada kot $\mathcal{O}(h^4)$, kar zagotavlja 
+hitro konvergenco za gladke funkcije.
+
+
+\section{Rezultati}
+Metodo smo preizkusili na več primerih hipotrohoide z različnimi parametri $a$ in $b$. Da bi preverili pravilnosti izračuna smo uporabili astroido ($a=1$, $b=-\frac{1}{4}$), za katero je ploščina analitično znana:
+\begin{equation}
+    P = \frac{3\pi a^2}{8} = \frac{3\pi}{8} \approx 1.1781.
+\end{equation}
+Naš numerični izračun da $P \approx 1.1781$, kar se ujema z analitično vrednostjo na 10 decimalk natančno. Simpsonovo pravilo za to funkcijo konvergira zelo hitro že pri $n=8$ je napaka reda $10^{-16}$
+
+Za glavno nalogo z $a=1$ in $b=-\frac{11}{7}$ smo dobili ploščino $P \approx 42.32$. Rezultati za vse primere so zbrani v tabeli~\ref{tab:rezultati}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $a$ & $b$ & $T$ & ploščina & oblika \\
+        \hline
+        $1$ & $-\frac{11}{7}$ & $22\pi$ & $42.315$ & 7 hribčkov \\
+        $1$ & $-\frac{1}{4}$ & $2\pi$ & $1.1781$ & astroida (4 konice) \\
+        $1$ & $-\frac{1}{5}$ & $2\pi$ & $1.5080$ & 5 konic \\
+        $1$ & $-\frac{2}{5}$ & $4\pi$ & $0.7540$ &  5 konic z zankami \\
+        $1$ & $-\frac{5}{17}$ & $10\pi$ & $4.5656$ & 17 konic \\
+        \hline
+    \end{tabular}
+    \caption{Ploščine hipotrohoide za različne parametre.}
+    \label{tab:rezultati}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{hipotrohoida.png}
+    \caption{Hipotrohoida z $a=1$ in $b=-\frac{11}{7}$.}
+    \label{fig:hipotrohoida}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.5\textwidth]{hipotrohoida2.png} &
+        \includegraphics[width=0.5\textwidth]{hipotrohoida3.png} \\
+        $a=1,\ b=-\frac{1}{4}$ & $a=1,\ b=-\frac{1}{5}$ \\[1em]
+        \includegraphics[width=0.5\textwidth]{hipotrohoida4.png} &
+        \includegraphics[width=0.5\textwidth]{hipotrohoida5.png} \\
+        $a=1,\ b=-\frac{2}{5}$ & $a=1,\ b=-\frac{5}{17}$ \\
+    \end{tabular}
+    \caption{Hipotrohoide z različnimi parametri.}
+    \label{fig:primeri}
+\end{figure}
+
+
+
+
+\end{document}
