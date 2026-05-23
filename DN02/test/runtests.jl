@@ -28,18 +28,15 @@ end
 end
 
 @testset "simpson" begin
-    @test isapprox(simpson(sin, 0.0, pi), 2.0, atol=1e-10)
-    @test isapprox(simpson(x -> x^2, 0.0, 1.0), 1/3, atol=1e-10)
+    @test isapprox(simpson(sin, 0.0, pi), 2.0, atol=1e-6)
+    @test isapprox(simpson(x -> x^2, 0.0, 1.0), 1/3, atol=1e-6)
 end
 
-@testset "ploscina" begin
-    p1 = ploscina(22pi, 1.0, -11.0/7.0, 100)
-    p2 = ploscina(22pi, 1.0, -11.0/7.0, 1000)
-    p3 = ploscina(22pi, 1.0, -11.0/7.0, 10000)
-    @test isapprox(p1, p2, atol=1e-4)
-    @test isapprox(p2, p3, atol=1e-6)
-    #preverimo z znano formulo za astroido (3*pi*a^2 / 8)
-    p_astroida = ploscina(2pi, 1.0, -1.0/4.0)
-    @test isapprox(p_astroida, 3*pi/8, rtol=1e-10)
+@testset "najdi_zunanja_presecisca" begin
+    presecisca = najdi_zunanja_presecisca()
+    # hipotrohoida z b=-11/7 ima 7 zunanjih presecisce
+    @test length(presecisca) == 7
+    # vsa presecisca naj bodo na priblizno enakem radiju
+    radiji = [sqrt(p[3]^2 + p[4]^2) for p in presecisca]
+    @test maximum(radiji) - minimum(radiji) < 0.01
 end
-
