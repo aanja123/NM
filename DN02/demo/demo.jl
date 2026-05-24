@@ -1,5 +1,6 @@
 using DN02
 using Plots
+using LinearAlgebra
 
 # narisi krivuljo s zunanjimi presecisci
 zunanja = najdi_zunanja_presecisca()
@@ -11,6 +12,7 @@ for (i, pr) in enumerate(zunanja)
     annotate!(pr[3], pr[4], text("$i", 10, :black))
 end
 display(p)
+savefig(p, "demo/presecisca.png")
 
 
 #narise lok med preseciscem 1 in 2
