@@ -85,19 +85,20 @@ function nihalo_harmonicno(t, theta0, omega0, g=9.81, l=1.0)
 end
 
 """
-    nihajni_cas(theta0, omega0=0.0, g=9.81, l=1.0)
+    nihajni_cas(theta0, g=9.81, l=1.0)
 Izračuna nihajni čas matematičnega nihala z bisekcijo.
-`theta0` je začetni odmik, `omega0` začetna kotna hitrost.
+`theta0` je začetni odmik,
 """
-function nihajni_cas(theta0, omega0=0.0, g=9.81, l=1.0)
+function nihajni_cas(theta0, g=9.81, l=1.0)
+    omega0 = 0.0
     f(t, y) = [y[2], -(g/l) * sin(y[1])]
     # ocena periode - malce vec kot harmonicno nihalo
     T_harm = 2π * sqrt(l/g)
     # resimo do malo cez eno periodo
     ts, ys = dopri5(f, 0.0, [theta0, omega0], 2*T_harm)
     thetas = [y[1] for y in ys]
-    # iscemo cas ko se theta vrne blizu zacetne vrednosti in omega spet enaka zacetni (en poln obhod)
-    for i in 2:length(ts)
+    # iscemo cas ko se theta vrne blizu zacetne vrednosti (en poln obhod)
+    for i in eachindex(thetas)[2:end]
         if thetas[i-1] * thetas[i] < 0 && ts[i] > T_harm/4
             # bisekcija za natancen prehod skozi 0
             ta, tb = ts[i-1], ts[i]
