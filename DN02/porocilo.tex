@@ -1,0 +1,86 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{2. domača naloga pri predmetu Numerična matematika}
+\author{Anja Abramovič}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Opis naloge}
+Naloga obravnava izračun ploščine območja, ki ga omejuje hipotrohoida z parametroma $a=1$ in $b=-\frac{11}{7}$. Implementirali smo iskanje samopresečišč krivulje ter numerično integracijo s sestavljenim Simpsonovim pravilom za izračun ploščine zunanjega dela krivulje.
+
+\section{Hipotrohoida}
+Hipotrohoida je krivulja, ki jo opiše točka na krogu s polmerom $|b|$, ki se kotali znotraj večjega kroga s polmerom $a$. Parametrično jo podamo z enačbama:
+\begin{align}
+    x(t) &= (a+b)\cos(t) + b\cos\left(\frac{a+b}{b}t\right), \\
+    y(t) &= (a+b)\sin(t) + b\sin\left(\frac{a+b}{b}t\right),
+\end{align}
+kjer je $t$ parameter, $a$ polmer zunanjega kroga in $b$ polmer notranjega kroga.
+
+V nalogi obravnavamo hipotrohoido z $a=1$ in $b=-\frac{11}{7}$. Krivulja se zapre po periodi $T = 22\pi$ in ima 7 zunanjih zank kot je razvidno iz slike~\ref{fig:hipotrohoida}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{hipotrohoida.png}
+    \caption{Hipotrohoida z $a=1$ in $b=-\frac{11}{7}$.}
+    \label{fig:hipotrohoida}
+\end{figure}
+
+\section{Metoda}
+Ploščino zunanje zanke hipotrohoide izračunamo v dveh korakih. Najprej poiščemo zunanja samopresečišča krivulje, nato pa integriramo med vsakim parom sosednjih presečišč.
+
+\subsection*{Iskanje samopresečišč}
+Samopresečišča krivulje poiščemo z Newtonovo metodo. Iščemo pare parametrov $(t_1, t_2)$, za katere krivulja pride do iste točke:
+\begin{equation}
+    F(t_1, t_2) = \begin{bmatrix} x(t_1) - x(t_2) \\ y(t_1) - y(t_2) \end{bmatrix} = \mathbf{0}.
+\end{equation}
+Jacobijeva matrika sistema je:
+\begin{equation}
+    J_F(t_1, t_2) = \begin{pmatrix} \dot{x}(t_1) & -\dot{x}(t_2) \\ \dot{y}(t_1) & -\dot{y}(t_2) \end{pmatrix}.
+\end{equation}
+Newtonovo metodo poženemo za vsak par začetnih približkov $(t_1^0, t_2^0)$ na mreži $N \times N$ točk na intervalu $[0, T]$. Rešitve ki padejo izven $[0, T]$  ali imajo $|t_1 - t_2| < \varepsilon$ zavržemo, podvojene rešitve pa združimo.
+
+Med vsemi presečišči obdržimo samo zunanja, tista z največjim radijem $r = \sqrt{x^2 + y^2}$. Ta presečišča uredimo po kotu glede na izhodišče.
+
+\subsection*{Izračun ploščine}
+Ploščino enega lista izračunamo z formulo med dvema sosednjima presečiščema:
+\begin{equation}
+    P_{\text{list}} = \frac{1}{2}\left|\int_{t_a}^{t_b} 
+    \left(x(t)\dot{y}(t) - \dot{x}(t)y(t)\right)dt\right|,
+\end{equation}
+kjer sta $t_a$ in $t_b$ izbrana kot najkrajši pozitivni interval med vsemi kombinacijami parametrov sosednjih presečišč. Skupna ploščina je vsota ploščin vseh 7 listov.
+
+Integral numerično aproksimiramo s sestavljenim Simpsonovim pravilom. Interval razdelimo na $2n$ enakih delov dolžine $h = \frac{t_b - t_a}{2n}$ in integral aproksimiramo kot:
+\begin{equation}
+    \int_{t_a}^{t_b} f(t)\,dt \approx \frac{h}{3}\left(f(t_a) + f(t_b) + 
+    4\sum_{k=1}^{n} f\left(t_a + (2k-1)h\right) + 
+    2\sum_{j=1}^{n-1} f\left(t_a + 2jh\right)\right).
+\end{equation}
+Napaka sestavljenega Simpsonovega pravila pada kot $\mathcal{O}(h^4)$, kar zagotavlja hitro konvergenco za gladke funkcije.
+
+
+\section{Rezultati}
+7 zunanjih samopresečišč hipotrohoide z $a=1$ in $b=-\frac{11}{7}$ so prikazana na sliki~\ref{fig:presecisca}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{presecisca.png}
+    \caption{Zunanja samopresečišča hipotrohoide z $a=1$ in $b=-\frac{11}{7}$.}
+    \label{fig:presecisca}
+\end{figure}
+
+Ploščina vsakega lista je $P_{\text{list}} \approx 2.023$, skupna ploščina vseh 7 listov pa je:
+\begin{equation}
+    P = \sum_{i=1}^{7} P_{\text{list},i} \approx 14.158.
+\end{equation}
+
+
+
+
+\end{document}
