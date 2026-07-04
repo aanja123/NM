@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{3. domača naloga pri predmetu Numerična matematika}
+\author{Anja Abramovič}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Opis naloge}
+Naloga obravnava reševanje diferencialne enačbe matematičnega nihala:
+\begin{equation}
+    \frac{g}{l}\sin(\theta(t)) + \ddot{\theta}(t) = 0, \quad \theta(0) = \theta_0, \quad \dot{\theta}(0) = \dot{\theta}_0,
+\end{equation}
+kjer je $\theta(t)$ kotni odmik, $g$ težni pospešek in $l$ dolžina nihala. Enačbo rešimo numerično z metodo DOPRI5 in primerjamo z analitično rešitvijo harmoničnega nihala. Dodatno izračunamo odvisnost nihajnega časa od energije nihala.
+
+
+\section{Metoda}
+\subsection*{Prevod na sistem prvega reda}
+Enačbo drugega reda prevedemo na sistem prvega reda z uvedbo kotne hitrosti 
+$\omega = \dot{\theta}$:
+\begin{equation}
+    \begin{bmatrix} \dot{\theta} \\ \dot{\omega} \end{bmatrix} = 
+    \begin{bmatrix} \omega \\ -\frac{g}{l}\sin(\theta) \end{bmatrix}.
+\end{equation}
+
+\subsection*{Metoda DOPRI5}
+Sistem rešimo z metodo Dormand-Prince reda 5 (DOPRI5), ki je Runge-Kutta metoda z adaptivnim korakom. V vsakem koraku izračunamo 7 vmesnih vrednosti 
+$k_1, \ldots, k_7$ in nov približek:
+\begin{equation}
+    y_{k+1} = y_k + h(b_1 k_1 + b_3 k_3 + b_4 k_4 + b_5 k_5 + b_6 k_6),
+\end{equation}
+kjer so $b_i$ uteži metode. Napako ocenimo kot razliko med rešitvama reda 4 in 5. Če je napaka prevelika, korak zavržemo in zmanjšamo $h$, sicer pa $h$ prilagodimo:
+\begin{equation}
+    h_{\text{nov}} = h \cdot \min\left(5, \max\left(0.2, \frac{0.9}{\|e\|^{0.2}}\right)\right).
+\end{equation}
+
+\subsection*{Harmonično nihalo}
+Za primerjavo uporabimo analitično rešitev harmoničnega nihala 
+$\ddot{\theta} + \frac{g}{l}\theta = 0$:
+\begin{equation}
+    \theta(t) = \theta_0\cos(\omega t) + \frac{\dot{\theta}_0}{\omega}\sin(\omega t),
+\end{equation}
+kjer je $\omega = \sqrt{g/l}$ kotna frekvenca. Ta aproksimacija je natančna le za majhne odmike.
+
+\subsection*{Nihajni čas}
+Nihajni čas matematičnega nihala določimo numerično. Krivuljo $\theta(t)$ rešimo do $2T_\text{harm}$ in poiščemo prvi prehod skozi $\theta = 0$ z bisekcijo. Nihajni čas je štirikratnik tega časa.
+
+
+
+\section{Rezultati}
+Primerjali smo matematično in harmonično nihalo za dva različna začetna odmika.
+
+Za majhen odmik $\theta_0 = \pi/8$ rad sta rešitvi zelo podobni (slika~\ref{fig:pi8}), saj je pri majhnih kotih $\sin(\theta) \approx \theta$. Za večji odmik $\theta_0 = \pi/2$ rad se rešitvi opazno razlikujeta (slika~\ref{fig:pi2}), matematično nihalo ima daljši nihajni čas ker $\sin(\theta) < \theta$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{primerjava_pi8.png}
+    \caption{Primerjava nihala pri $\theta_0 = \pi/8$ rad.}
+    \label{fig:pi8}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{primerjava_pi2.png}
+    \caption{Primerjava nihala pri $\theta_0 = \pi/2$ rad.}
+    \label{fig:pi2}
+\end{figure}
+
+Odvisnost nihajnega časa od energije je prikazana na sliki~\ref{fig:nihajni_cas}. Nihajni čas harmoničnega nihala je konstanten ($T \approx 2.006$ s), medtem ko nihajni čas matematičnega nihala narašča z energijo. Ko se odmik približuje $\pi$, gre nihajni čas proti neskončnosti.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{nihajni_cas.png}
+    \caption{Odvisnost nihajnega časa matematičnega nihala od energije.}
+    \label{fig:nihajni_cas}
+\end{figure}
+
+
+
+
+
+\end{document}
